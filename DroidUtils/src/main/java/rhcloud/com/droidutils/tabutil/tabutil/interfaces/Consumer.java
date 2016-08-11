@@ -6,7 +6,7 @@ package rhcloud.com.droidutils.tabutil.tabutil.interfaces;
  * @since 1.0
  * @version 1.0
  */
-public interface Producer {
+public interface Consumer {
 
-    public void setConsumer(Consumer c);
+    void onDataChange();
 }

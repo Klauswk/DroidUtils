@@ -8,5 +8,5 @@ package rhcloud.com.droidutils.validation;
  */
 public interface FormValidation {
 
-    public boolean isValid();
+    boolean isValid();
 }
