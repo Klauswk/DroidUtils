@@ -10,8 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
+import rhcloud.com.droidutils.tabutil.tabutil.impl.TabServiceDefaultImpl;
+import rhcloud.com.droidutils.tabutil.tabutil.interfaces.OnAddTab;
+import rhcloud.com.droidutils.tabutil.tabutil.interfaces.TabService;
 
 /**
  * @author <a href="https://github.com/Klauswk">Klaus Klein</a>
@@ -20,7 +21,7 @@ import java.util.List;
  * @since 1.0
  * @version 1.0
  */
-public class Tab implements View.OnClickListener{
+public class Tab implements View.OnClickListener, OnAddTab{
 
     /**
      * Act has a holder to the views, extends {@link android.support.v4.view.ViewPager}
@@ -34,6 +35,42 @@ public class Tab implements View.OnClickListener{
 
     private Context context;
 
+    private TabService tabService;
+
+    /**
+     * Base constructor.
+     * @param activity , must extends {@link FragmentActivity}
+     * @param tabViewId , the view id of the {@link TabBody}
+     * @param tabLayoutId , the view id of the {@link TabLayout}
+     * @since 1.0
+     * @version 1.0
+     */
+    public Tab(@NonNull FragmentActivity activity, @IdRes int tabViewId, @IdRes int tabLayoutId,TabService tabService){
+        tabBody = (TabBody) activity.findViewById(tabViewId);
+        tabBody.prepare(activity);
+        tabLayout = (TabLayout) activity.findViewById(tabLayoutId);
+        tabLayout.setupWithViewPager(tabBody);
+        context = activity.getBaseContext();
+        this.tabService = tabService;
+    }
+
+    /**
+     * Base constructor.
+     * @param activity , must extends {@link FragmentActivity}
+     * @param tabBody , the {@link TabBody}
+     * @param tabLayout , the {@link TabLayout}
+     * @since 1.0
+     * @version 1.0
+     */
+    public Tab(@NonNull FragmentActivity activity, @NonNull TabBody tabBody, @NonNull TabLayout tabLayout,TabService tabService){
+        this.tabBody = tabBody;
+        tabBody.prepare(activity);
+        this.tabLayout = tabLayout;
+        this.tabLayout.setupWithViewPager(tabBody);
+        this.tabService = tabService;
+    }
+
+
     /**
      * Base constructor.
      * @param activity , must extends {@link FragmentActivity}
@@ -43,15 +80,9 @@ public class Tab implements View.OnClickListener{
      * @version 1.0
      */
     public Tab(@NonNull FragmentActivity activity, @IdRes int tabViewId, @IdRes int tabLayoutId){
-        tabBody = (TabBody) activity.findViewById(tabViewId);
-        tabBody.prepare(activity);
+       this(activity,tabViewId,tabLayoutId,null);
 
-        tabLayout = (TabLayout) activity.findViewById(tabLayoutId);
-        tabLayout.setupWithViewPager(tabBody);
-
-        context = activity.getBaseContext();
-
-        listOfHeaders = new ArrayList<>(5);
+        this.tabService = new TabServiceDefaultImpl(this);
     }
 
     /**
@@ -63,14 +94,10 @@ public class Tab implements View.OnClickListener{
      * @version 1.0
      */
     public Tab(@NonNull FragmentActivity activity, @NonNull TabBody tabBody, @NonNull TabLayout tabLayout){
-        this.tabBody = tabBody;
-        tabBody.prepare(activity);
+        this(activity,tabBody,tabLayout,null);
 
-        this.tabLayout = tabLayout;
-        this.tabLayout.setupWithViewPager(tabBody);
-        listOfHeaders = new ArrayList<>(5);
+        this.tabService = new TabServiceDefaultImpl(this);
     }
-
     /**
      * A <a href="http://www.tutorialspoint.com/design_pattern/factory_pattern.htm">Factory pattern</a> method to create a {@link Tab}
      *
@@ -82,7 +109,8 @@ public class Tab implements View.OnClickListener{
      * @version 1.0
      */
     public static Tab createTab(@NonNull FragmentActivity activity, @IdRes int tabViewId, @IdRes int tabLayoutId){
-        Tab tab = new Tab(activity,tabViewId,tabLayoutId);
+        Tab tab = new Tab(activity,tabViewId,tabLayoutId,null);
+        tab.setTabService(new TabServiceDefaultImpl(tab));
         return tab;
     }
 
@@ -124,6 +152,22 @@ public class Tab implements View.OnClickListener{
         this.tabLayout = tabLayout;
     }
 
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public TabService getTabService() {
+        return tabService;
+    }
+
+    public void setTabService(TabService tabService) {
+        this.tabService = tabService;
+    }
+
     /**
      * The base addTab method.
      * A <a href="http://www.tutorialspoint.com/design_pattern/factory_pattern.htm">Factory pattern</a> method to create a {@link Tab}
@@ -133,7 +177,7 @@ public class Tab implements View.OnClickListener{
      * @return tab
      */
     public Tab addTab(@NonNull TabFragment tabFragment){
-        addTab(tabFragment,-1);
+        tabService.getOnAddTab().addTab(tabFragment,-1);
         return this;
     }
 
@@ -147,23 +191,8 @@ public class Tab implements View.OnClickListener{
      * @return tab
      */
     public Tab addTab(@NonNull TabFragment tabFragment , int position){
-        tabBody.addTab(tabFragment,position);
-        updateTabHeader();
+        tabService.getOnAddTab().addTab(tabFragment,position);
         return this;
-    }
-
-    private List<TabHeaderView> listOfHeaders;
-
-    private void updateTabHeader() {
-        for(int i = 0; i < tabBody.getTabContainer().getCount() ; i++){
-            if(listOfHeaders.size() <= i){
-                TabHeaderView tabView = new TabHeaderView(context, tabBody.getTabContainer().getTabFragment(i), this);
-                listOfHeaders.add(tabView);
-                tabLayout.getTabAt(i).setCustomView(tabView);
-            }else{
-                tabLayout.getTabAt(i).setCustomView(listOfHeaders.get(i));
-            }
-        }
     }
 
     /**
@@ -174,7 +203,8 @@ public class Tab implements View.OnClickListener{
      * @return tab
      */
     public Tab addTab(@NonNull Fragment fragment){
-        return addTab(new TabFragment(fragment), -1);
+        tabService.getOnAddTab().addTab(new TabFragment(fragment), -1);
+        return this;
     }
 
     /**
@@ -186,7 +216,8 @@ public class Tab implements View.OnClickListener{
      * @return tab
      */
     public Tab addTab(@NonNull Fragment fragment, @Nullable String title){
-        return addTab(fragment,title,null);
+        tabService.getOnAddTab().addTab(fragment,title,null);
+        return this;
     }
 
     /**
@@ -199,7 +230,8 @@ public class Tab implements View.OnClickListener{
      * @return tab
      */
     public Tab addTab(@NonNull Fragment fragment, @Nullable String title , @Nullable Drawable drawable){
-        return addTab(new TabFragment(fragment,title,drawable), -1);
+        tabService.getOnAddTab().addTab(new TabFragment(fragment,title,drawable), -1);
+        return this;
     }
 
     /**
@@ -211,7 +243,8 @@ public class Tab implements View.OnClickListener{
      * @return tab
      */
     public Tab addTab(@NonNull Fragment fragment, int position){
-        return addTab(new TabFragment(fragment), position);
+        tabService.getOnAddTab().addTab(new TabFragment(fragment), position);
+        return this;
     }
 
     /**
@@ -224,7 +257,8 @@ public class Tab implements View.OnClickListener{
      * @return tab
      */
     public Tab addTab(@NonNull Fragment fragment, @Nullable String title, int position){
-        return addTab(fragment,title,null,position);
+        tabService.getOnAddTab().addTab(fragment,title,null,position);
+        return this;
     }
 
     /**
@@ -238,20 +272,36 @@ public class Tab implements View.OnClickListener{
      * @return tab
      */
     public Tab addTab(@NonNull Fragment fragment, @Nullable String title , @Nullable Drawable drawable, int position){
-        return addTab(new TabFragment(fragment,title,drawable), position);
+        tabService.getOnAddTab().addTab(new TabFragment(fragment,title,drawable), position);
+        return this;
     }
 
     @Override
     public void onClick(View view) {
         for(int i = 0; i < tabBody.getTabContainer().getCount() ; i++){
             if(tabLayout.getTabAt(i).getCustomView().getTag().equals(view.getTag())){
-                TabFragment removed = tabBody.getTabContainer().removeTabAt(i);
-                listOfHeaders.remove(i);
-                removed = null;
-                updateTabHeader();
-                tabBody.setCurrentItem(i == 0 ? 0 : --i);
+                removeTabAt(i);
                 return;
             }
         }
+    }
+
+    /**
+     * Remove and update a {@link TabFragment} at the <code>position</code>
+     * @param position to be removed.
+     * @return the fragment removed.
+     */
+    private TabFragment removeTabAt(int position) {
+        return tabService.getOnTabRemove().removeTabAt(position);
+    }
+
+    /**
+     * Remove the <code>fragment</code> from the {@link Tab}
+     * @param fragment to be removed.
+     * @return the removed fragment or null.
+     */
+    @Nullable
+    public TabFragment removeTab(Fragment fragment){
+        return tabService.getOnTabRemove().removeTab(fragment);
     }
 }

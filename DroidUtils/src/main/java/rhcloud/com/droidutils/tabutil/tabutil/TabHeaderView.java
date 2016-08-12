@@ -62,11 +62,15 @@ public class TabHeaderView extends LinearLayout {
 
         ibClose.setVisibility(tabFragment.getFragment() instanceof Closeable ? View.VISIBLE : View.GONE);
         setTag(hashCode());
+
+        tabFragment.setTabHeaderView(this);
     }
 
     public TabHeaderView(@NonNull Context context, @NonNull TabFragment tabFragment, @Nullable OnClickListener onClosePressed) {
         this(context, tabFragment);
-        setOnClosePressed(onClosePressed);
+        if(onClosePressed != null){
+            setOnClosePressed(onClosePressed);
+        }
     }
 
     public TabHeaderView(@NonNull Context context, @NonNull AttributeSet attrs) {

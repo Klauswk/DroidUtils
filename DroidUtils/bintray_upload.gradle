@@ -1,3 +1,6 @@
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
 version = android.defaultConfig.versionName
 group = "klauswk"
 

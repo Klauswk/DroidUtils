@@ -16,6 +16,7 @@ public class TabFragment{
     private Fragment fragment;
     private String title;
     private Drawable drawable;
+    private TabHeaderView tabHeaderView;
 
 
     public TabFragment(@NonNull Fragment fragment, @Nullable String title) {
@@ -32,6 +33,11 @@ public class TabFragment{
         if(drawable != null){
             this.drawable = drawable;
         }
+    }
+
+    public TabFragment(@NonNull Fragment fragment, @Nullable String title, @Nullable Drawable drawable, @NonNull TabHeaderView tabHeaderView) {
+        this(fragment,title,drawable);
+        this.tabHeaderView = tabHeaderView;
     }
 
     public TabFragment(Fragment fragment) {
@@ -62,4 +68,11 @@ public class TabFragment{
         this.drawable = drawable;
     }
 
+    public TabHeaderView getTabHeaderView() {
+        return tabHeaderView;
+    }
+
+    public void setTabHeaderView(TabHeaderView tabHeaderView) {
+        this.tabHeaderView = tabHeaderView;
+    }
 }

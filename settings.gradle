@@ -1,1 +1,1 @@
-include ':DroidUtils'
+include ':DroidUtils', ':testapp'

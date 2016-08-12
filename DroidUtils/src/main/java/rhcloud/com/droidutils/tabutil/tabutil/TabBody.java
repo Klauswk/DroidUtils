@@ -9,6 +9,8 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import rhcloud.com.droidutils.tabutil.tabutil.interfaces.FocusOnAdd;
+
 /**
  * @author <a href="https://github.com/Klauswk">Klaus Klein</a>
  * Class that extends {@link ViewPager} and override some of their methods
@@ -56,17 +58,6 @@ public class TabBody extends ViewPager {
     }
 
     /**
-     * Checks if the {@link TabContainer} has been properly prepare.
-     * @since 1.0
-     * @version 1.0
-     */
-    private void checkIfHasBeenPrepare(){
-        if(tabContainer == null){
-            throw new IllegalStateException("Tab Container is null, did you forget to call #prepare?");
-        }
-    }
-
-    /**
      * Add the {@link TabFragment} to the {@link TabContainer}
      * @param tabFragment
      * @param position
@@ -75,7 +66,11 @@ public class TabBody extends ViewPager {
      */
     public void addTab(@NonNull TabFragment tabFragment, int position){
         tabContainer.addTab(tabFragment,-1);
-        setCurrentItem(position);
+        if(tabFragment.getFragment() instanceof FocusOnAdd){
+            setCurrentItem(tabContainer.getCount() -1);
+        }else{
+            setCurrentItem(position);
+        }
     }
 
     @Deprecated
@@ -105,22 +100,6 @@ public class TabBody extends ViewPager {
             tabContainer.addTab(tabFragment,position);
         }
     }
-
-    /**
-     * Add the {@link TabFragment} to the {@link TabContainer}
-     * @param tabFragment
-     * @since 1.0
-     * @version 1.0
-     */
-    public void addTab(@NonNull TabFragment tabFragment){
-        checkIfHasBeenPrepare();
-        tabContainer.addTab(tabFragment,-1);
-    }
-
-    public TabFragment removeTabAt(int position){
-        return tabContainer.removeTabAt(position);
-    }
-
 
     /**
      * Getter for the {@link TabContainer}
