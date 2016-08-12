@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DroidUtils</string>
+    <string name="droid_version">0.3-ALPHA</string>
 </resources>

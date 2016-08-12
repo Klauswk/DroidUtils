@@ -1,0 +1,5 @@
+<resources>
+
+    <public name="droid_version" type="string"/>
+
+</resources>
