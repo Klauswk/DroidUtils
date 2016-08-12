@@ -59,14 +59,14 @@ public class FormItem extends LinearLayout {
 
         TypedArray a = context.getTheme().obtainStyledAttributes(
                 attrs,
-                R.styleable.form_item,
+                R.styleable.droidutils_form_item,
                 0, 0);
 
         try {
-            setTvTitle(a.getString(R.styleable.form_item_tvTitle));
-            setAnwserHint(a.getString(R.styleable.form_item_anwserHint));
-            setAnwserText(a.getString(R.styleable.form_item_anwserText));
-            String isEnabled = a.getString(R.styleable.form_item_android_enabled);
+            setTvTitle(a.getString(R.styleable.droidutils_form_item_droidutils_tvTitle));
+            setAnwserHint(a.getString(R.styleable.droidutils_form_item_droidutils_anwserHint));
+            setAnwserText(a.getString(R.styleable.droidutils_form_item_droidutils_anwserText));
+            String isEnabled = a.getString(R.styleable.droidutils_form_item_android_enabled);
             if (isEnabled != null) {
                 setEnable(Boolean.parseBoolean(isEnabled));
             }
@@ -78,7 +78,7 @@ public class FormItem extends LinearLayout {
 
     private void setUpUI() {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.form_item, this);
+        inflater.inflate(R.layout.droidutils_form_item, this);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
         etAnwser = (EditText) findViewById(R.id.etAnwser);
     }

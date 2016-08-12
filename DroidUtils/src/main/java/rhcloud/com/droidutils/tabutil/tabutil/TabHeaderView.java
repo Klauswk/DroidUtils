@@ -38,7 +38,7 @@ public class TabHeaderView extends LinearLayout {
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        inflater.inflate(R.layout.tab_view, this);
+        inflater.inflate(R.layout.droidutils_tab_view, this);
 
         ivIcon = (ImageView) findViewById(R.id.icon);
         tvTitle = (TextView) findViewById(R.id.text1);

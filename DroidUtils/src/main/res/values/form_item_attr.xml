@@ -1,8 +1,8 @@
 <resources>
-    <declare-styleable name="form_item">
-        <attr name="tvTitle" format="string" />
-        <attr name="anwserHint" format="string" />
-        <attr name="anwserText" format="string" />
+    <declare-styleable name="droidutils_form_item">
+        <attr name="droidutils_tvTitle" format="string" />
+        <attr name="droidutils_anwserHint" format="string" />
+        <attr name="droidutils_anwserText" format="string" />
         <attr name="android:enabled" />
     </declare-styleable>
 </resources>

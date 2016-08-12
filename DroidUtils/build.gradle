@@ -10,7 +10,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
-        versionName "0.3-ALPHA"
+        versionName "0.4-ALPHA"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -34,6 +34,8 @@ android {
             java.srcDirs = ['src/main/java', 'src/main/java']
         }
     }
+
+    resourcePrefix 'droidutils'
 }
 
 dependencies {

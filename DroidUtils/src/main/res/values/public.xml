@@ -1,5 +1,5 @@
 <resources>
 
-    <public name="droid_version" type="string"/>
+    <public name="droidutils_form_item" type="declare-styleable"/>
 
 </resources>
